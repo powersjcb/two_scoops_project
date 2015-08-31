@@ -12,4 +12,10 @@ urlpatterns = [
         view=views.FlavorListView.as_view(),
         name='list'
     ),
+
+    url(
+        regex=r'^(?P<pk>[0-9]+)/$',
+        view=views.FlavorDetailView.as_view(),
+        name='detail'
+    )
 ]

@@ -7,5 +7,8 @@ from braces.views import LoginRequiredMixin
 
 from .models import Flavor
 
-class FlavorListView(ListView):
-    model = Flavor 
+class FlavorListView(LoginRequiredMixin, ListView):
+    model = Flavor
+
+class FlavorDetailView(LoginRequiredMixin, DetailView):
+    model = Flavor
