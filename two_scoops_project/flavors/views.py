@@ -1,3 +1,11 @@
-from django.shortcuts import render
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
-# Create your views here.
+from django.views.generic import ListView, DetailView
+
+from braces.views import LoginRequiredMixin
+
+from .models import Flavor
+
+class FlavorListView(ListView):
+    model = Flavor 
