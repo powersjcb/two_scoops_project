@@ -1,0 +1,3 @@
+[run]
+include = two_scoops_project/*
+omit = *migrations*
