@@ -6,6 +6,8 @@ module.exports = function (grunt) {
   // see: https://github.com/sindresorhus/load-grunt-tasks
   require('load-grunt-tasks')(grunt);
 
+  require('grunt-contrib-concat')(grunt);
+
   // Time how long tasks take. Can help when optimizing build times
   // see: https://npmjs.org/package/time-grunt
   require('time-grunt')(grunt);
@@ -54,6 +56,16 @@ module.exports = function (grunt) {
         },
       },
     },
+
+  concat: {
+    options: {
+      separator: ';',
+    },
+    dist: {
+      src: ['<%= paths.js %>/src/**/*.js'],
+      dest: '<%= paths.js %>/project.js',
+    },
+  },
 
     // see: https://github.com/sindresorhus/grunt-sass
     sass: {
