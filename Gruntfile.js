@@ -34,6 +34,7 @@ module.exports = function (grunt) {
     pkg: appConfig,
 
     // see: https://github.com/gruntjs/grunt-contrib-watch
+    // setup conditions for running tasks
     watch: {
       gruntfile: {
         files: ['Gruntfile.js']
@@ -65,13 +66,15 @@ module.exports = function (grunt) {
       },
 
       'template-module': {
-        files: ['<%= paths.js_src %>/templates/**/*.jst'],
-        tasks: ['template-module', 'concat'],
+        files: ['<%= paths.js_src %>/templates/**/*.jst.ejs'],
+        tasks: ['template-module'],
         options: {
           atBegin: true,
         }
       }
     },
+
+  // setup tasks to be run
 
   // setup compiler for javascript templates, will use 'JST' global namespace
     'template-module': {
@@ -79,15 +82,17 @@ module.exports = function (grunt) {
         options: {
           module: true,
           provider: 'lodash',
+          requireProvider: false,
           prettify: true,
+          namespace: 'JST',
           processName: function(filename) {
-            var shortName = filename.split('/templates/')[1]
+            var shortName = filename.split('/templates/')[1].split('.jst.ejs')[0];
             return shortName.toLowerCase();
           }.bind(this)
         },
         files: {
           '<%= paths.js_src %>/templates/templates.js': [
-            "<%= paths.js_src %>/templates/**/*.jst",
+            "<%= paths.js_src %>/templates/**/*.jst.ejs",
           ],
         },
       },
@@ -95,15 +100,15 @@ module.exports = function (grunt) {
 
     concat: {
       options: {
-        separator: ';',
+        separator: ';\n',
       },
       dist: {
         src: [
-          '<%= paths.js_src %>/js_templates/templates.js',
+          '<%= paths.js_src %>/app.js',
+          '<%= paths.js_src %>/templates/templates.js',
           '<%= paths.js_src %>/models/**/*.js',
           '<%= paths.js_src %>/collections/**/*.js',
           '<%= paths.js_src %>/views/**/*.js',
-          '<%= paths.js_src %>/app.js',
         ],
         dest: '<%= paths.js %>/project.js',
       },
@@ -178,7 +183,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'sass:dist',
     'postcss',
-    'concat',
     'template-module',
   ]);
 
