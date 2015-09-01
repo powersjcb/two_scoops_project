@@ -6,7 +6,7 @@ module.exports = function (grunt) {
   // see: https://github.com/sindresorhus/load-grunt-tasks
   require('load-grunt-tasks')(grunt);
 
-  require('grunt-contrib-concat')(grunt);
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   // Time how long tasks take. Can help when optimizing build times
   // see: https://npmjs.org/package/time-grunt
@@ -23,8 +23,9 @@ module.exports = function (grunt) {
       fonts: this.app + '/static/fonts',
       images: this.app + '/static/images',
       js: this.app + '/static/js',
+      js_src: this.app + '/static/js/src',
       manageScript: 'manage.py',
-    }
+    };
   };
 
   grunt.initConfig({
@@ -46,7 +47,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         files: [
-          '<%= paths.js %>/**/*.js',
+          '<%= paths.js %>/project.js',
           '<%= paths.sass %>/**/*.{scss,sass}',
           '<%= paths.app %>/**/*.html'
           ],
@@ -55,17 +56,57 @@ module.exports = function (grunt) {
           livereload: true,
         },
       },
+      concat: {
+        files: ['<%= paths.js_src %>/**/*.js'],
+        tasks: ['concat'],
+        options: {
+          atBegin: true,
+        },
+      },
+
+      'template-module': {
+        files: ['<%= paths.js_src %>/templates/**/*.jst'],
+        tasks: ['template-module', 'concat'],
+        options: {
+          atBegin: true,
+        }
+      }
     },
 
-  concat: {
-    options: {
-      separator: ';',
+  // setup compiler for javascript templates, will use 'JST' global namespace
+    'template-module': {
+      compile: {
+        options: {
+          module: true,
+          provider: 'lodash',
+          prettify: true,
+          processName: function(filename) {
+            return filename.toLowerCase();
+          }.bind(this)
+        },
+        files: {
+          '<%= paths.js_src %>/templates/templates.js': [
+            "<%= paths.js_src %>/templates/**/*.jst",
+          ],
+        },
+      },
     },
-    dist: {
-      src: ['<%= paths.js %>/src/**/*.js'],
-      dest: '<%= paths.js %>/project.js',
+
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: [
+          '<%= paths.js_src %>/js_templates/templates.js',
+          '<%= paths.js_src %>/models/**/*.js',
+          '<%= paths.js_src %>/collections/**/*.js',
+          '<%= paths.js_src %>/views/**/*.js',
+          '<%= paths.js_src %>/app.js',
+        ],
+        dest: '<%= paths.js %>/project.js',
+      },
     },
-  },
 
     // see: https://github.com/sindresorhus/grunt-sass
     sass: {
@@ -135,11 +176,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'sass:dist',
-    'postcss'
+    'postcss',
+    'concat',
+    'template-module',
   ]);
 
   grunt.registerTask('default', [
-    'build'
+    'build',
   ]);
 
 };
