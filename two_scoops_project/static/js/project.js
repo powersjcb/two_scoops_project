@@ -24,7 +24,7 @@ TwoScoopsApp.Models.Flavor = Backbone.Model.extend({
 
 });
 ;
-window.TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
+TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
   template: JST['flavor/index_item'],
 
   initialize: function() {
