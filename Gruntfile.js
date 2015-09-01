@@ -81,7 +81,8 @@ module.exports = function (grunt) {
           provider: 'lodash',
           prettify: true,
           processName: function(filename) {
-            return filename.toLowerCase();
+            var shortName = filename.split('/templates/')[1]
+            return shortName.toLowerCase();
           }.bind(this)
         },
         files: {
