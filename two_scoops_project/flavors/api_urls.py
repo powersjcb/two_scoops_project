@@ -6,6 +6,6 @@ from django.conf.urls import url
 urlpatterns = [
     url(
         regex=r'^$',
-        view=api_views.FlavorsAPI.as_view(),
+        view=api_views.FlavorsList.as_view(),
     ),
 ]

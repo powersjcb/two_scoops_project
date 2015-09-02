@@ -7,9 +7,10 @@ class Timestampable(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('created_at',)
 
 class Authorable(models.Model):
     author = models.ForeignKey(User)
-    
+
     class Meta:
         abstract = True
