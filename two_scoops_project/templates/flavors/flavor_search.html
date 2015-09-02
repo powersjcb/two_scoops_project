@@ -3,5 +3,13 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-  
+  <div class="search-box input-group">
+    <label for="search-term" class="form-control">Search flavors</label>
+    <input id="search-term" class="form-control" type="text" name="name" value="">
+  </div>
+
+  <br>
+
+  <div class="search-results" id="search-content"></div>
+
 {% endblock content %}

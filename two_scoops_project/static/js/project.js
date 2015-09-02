@@ -20,15 +20,12 @@ this["JST"]["flavors/index_item"] = function (obj) {
   return __p
 };;
 TwoScoopsApp.Models.Flavor = Backbone.Model.extend({
-
-
 });
 ;
 TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
   template: JST['flavor/index_item'],
 
   initialize: function() {
-    console.log('made a view')
   },
 
   render: function() {
