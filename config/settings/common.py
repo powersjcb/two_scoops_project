@@ -47,10 +47,19 @@ LOCAL_APPS = (
     'two_scoops_project.users',  # custom users app
     'two_scoops_project.utils',
     'two_scoops_project.flavors',
+    'two_scoops_project.api',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
 
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
