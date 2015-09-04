@@ -6,5 +6,10 @@ from rest_framework import serializers
 class FlavorSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Flavor
-        fields = ('flavor_name', 'flavor_description')
-        read_only_fields = ('id')
+        fields = (
+            'id', 'flavor_name',
+            'flavor_description', 'created_at',
+            'author',
+            )
+        read_only_fields = ('id', 'created_at', 'author')
+        extra_kwards = {'author': {'allow_null': True}}

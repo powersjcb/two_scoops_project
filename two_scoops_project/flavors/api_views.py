@@ -17,8 +17,28 @@ class FlavorsList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = FlavorSerializer(data=request.data['flavor'])
+        serializer = FlavorSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            serializer.perform_create()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def perform_create(self, serializer):
+        if serializer.data.get('author') == None:
+            serializer.save(owner=self.request.user)
+
+class FlavorsSearch(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        # chain '.filter().filter()' methods to create 'OR' query
+        search_term = request.GET.get('term')
+        if search_term is not None and len(search_term) > 2:
+            flavors = Flavor.objects.filter(
+                flavor_name__icontains=search_term
+            ).filter(
+                flavor_description__icontains=search_term
+            )
+            serializer = FlavorSerializer(flavors, many=True)
+            return Response(serializer.data)
+        return Response({})

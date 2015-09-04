@@ -9,4 +9,9 @@ urlpatterns = [
         regex=r'^$',
         view=api_views.FlavorsList.as_view(),
     ),
+
+    url(
+        regex=r'^search/',
+        view=api_views.FlavorsSearch.as_view()
+    )
 ]
