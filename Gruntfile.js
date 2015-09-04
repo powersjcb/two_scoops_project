@@ -109,6 +109,8 @@ module.exports = function (grunt) {
           '<%= paths.js_src %>/models/**/*.js',
           '<%= paths.js_src %>/collections/**/*.js',
           '<%= paths.js_src %>/views/**/*.js',
+          '<%= paths.js_src %>/routers/**/*.js',
+          '<%= paths.js_src %>/app_invoke/**/*.js',
         ],
         dest: '<%= paths.js %>/project.js',
       },

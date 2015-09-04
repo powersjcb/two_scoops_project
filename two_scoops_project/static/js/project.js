@@ -9,21 +9,19 @@ window.TwoScoopsApp = {
 
     // apply router based on current page content
     var path = window.location.pathname;
-    if (path.match(/^flavors\/search\//)) {
-      this.searchRouter = new TwoScoopsApp.Routers.Search();
-    } else if (path.match(/^flavors\/share\//)) {
+    if (path.match(/^\/flavors\/search\//)) {
+      this.searchRouter = this.Routers.Search({
+        $rootEl: $('#search-results'),
+        $userInput: $('input#search-term'),
+      });
+    } else if (path.match(/^\/flavors\/share\//)) {
       // this.shareRouter = new TwoScoopsApp.Routers.Share();
     }
 
-
-    Backbone.History.navigate();
+    Backbone.history.start();
     return this;
   },
 };
-
-(function(window) {
-  window.app = window.TwoScoopsApp.initialize();
-})(window);
 ;
 this["JST"] = this["JST"] || {};
 this["JST"]["flavors/index_item"] = function (obj) {
@@ -52,4 +50,36 @@ TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
     this.$el.html(content);
     return this;
   },
+});
+;
+TwoScoopsApp.Routers.Search = Backbone.Router.extend({
+
+  initialize: function(options) {
+    this.$rootEl = options.$rootEl;
+    this.$userInput = options.$userInput;
+  },
+
+  routes: {
+    '':'root',
+  },
+
+  root: function () {
+    // will render empty results view
+    console.log('root');
+  },
+
+  results: function(term) {
+    // shows results based on search term
+    console.log('results');
+
+  },
+
+  _swapView: function(view) {
+    if (this._currentView) {
+      this._currentView.remove();
+    }
+    this._currentView = view;
+    this.$rootEl.html(view.render().$el);
+  },
+
 });
