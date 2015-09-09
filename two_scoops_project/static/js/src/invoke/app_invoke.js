@@ -1,1 +1,1 @@
-window.app = window.TwoScoopsApp.initialize();
+window.TwoScoopsApp.initialize();

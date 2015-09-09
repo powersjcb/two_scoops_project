@@ -6,17 +6,16 @@ TwoScoopsApp.Routers.Search = Backbone.Router.extend({
   },
 
   routes: {
-    '':'root',
-  },
-
-  root: function () {
-    // will render empty results view
-    console.log('root');
+    ':term':'results',
   },
 
   results: function(term) {
-    // shows results based on search term
-    console.log('results');
+    var flavors = TwoScoopsApp.Collections.Flavors;
+    flavors.search(term);
+
+    var searchView = TwoScoopsApp.Views.SearchView({
+      collection: flavors,
+    });
 
   },
 
@@ -26,6 +25,10 @@ TwoScoopsApp.Routers.Search = Backbone.Router.extend({
     }
     this._currentView = view;
     this.$rootEl.html(view.render().$el);
+  },
+
+  listenToUserInput: function() {
+
   },
 
 });
