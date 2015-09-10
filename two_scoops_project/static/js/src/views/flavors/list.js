@@ -1,5 +1,5 @@
 TwoScoopsApp.Views.FlavorList = Backbone.View.extend({
-  template: JST['flavor/index_item'],
+  template: JST['flavors/index_item'],
 
   initialize: function() {
   },

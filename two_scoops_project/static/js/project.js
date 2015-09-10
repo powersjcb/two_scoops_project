@@ -11,8 +11,7 @@ window.TwoScoopsApp = {
     var path = window.location.pathname;
     // if (path.match(/^\/flavors\/search\//)) {
       this.searchRouter = new this.Routers.Search({
-        $rootEl: $('#search-results'),
-        $userInput: $('input#search-term'),
+        $rootEl: $('#search'),
       });
     // } else if (path.match(/^\/flavors\/share\//)) {
       // this.shareRouter = new TwoScoopsApp.Routers.Share();
@@ -39,7 +38,7 @@ this["JST"]["flavors/list_item"] = function (obj) {
   var __t, __p = '',
       __e = _.escape;
   with(obj) {
-    __p += '<h4 class="list-group-item-heading">' + ((__t = (flavor.get('flavor_name'))) == null ? '' : __t) + '</h4>\n<div class="list-group-item-body">\n  ' + ((__t = (flavor.get('flavor_description'))) == null ? '' : __t) + '\n</div>\n';
+    __p += '<h4 class="list-group-item-heading">' + ((__t = (flavor.escape('flavor_name'))) == null ? '' : __t) + '</h4>\n<div class="list-group-item-body">\n  ' + ((__t = (flavor.escape('flavor_description'))) == null ? '' : __t) + '\n</div>\n';
 
   }
   return __p
@@ -61,28 +60,28 @@ TwoScoopsApp.Models.Flavor = Backbone.Model.extend({
 TwoScoopsApp.Collections.Flavors = Backbone.Collection.extend({
   url: '/api/flavors',
   model: TwoScoopsApp.Models.Flavor,
-}, {
-  search: function(searchTerm) {
-    var search = $.Deferred();
-    options = options || {};
-    var collections  = new this([], options);
-    collections.url = _.result(collection, this.url) + 'search?term=' + query;
-    var fetch = collection.fetch({data: {term: query}});
-    fetch.done(_.bind(function() {
-      Backbone.Events.trigger('search:done');
-      search.resolveWith(this,[collection]);
-    }, this));
-    fetch.fail(function() {
-      Backbone.Events.trigger('search:fail');
-      search.reject();
-    });
-    return search.promise();
-  },
+// }, {
+//   search: function(searchTerm) {
+//     var search = $.Deferred();
+//     options = options || {};
+//     var collections  = new this([], options);
+//     collections.url = _.result(collection, this.url) + 'search?term=' + query;
+//     var fetch = collection.fetch({data: {term: query}});
+//     fetch.done(_.bind(function() {
+//       Backbone.Events.trigger('search:done');
+//       search.resolveWith(this,[collection]);
+//     }, this));
+//     fetch.fail(function() {
+//       Backbone.Events.trigger('search:fail');
+//       search.reject();
+//     });
+//     return search.promise();
+//   },
 
 });
 ;
 TwoScoopsApp.Views.FlavorList = Backbone.View.extend({
-  template: JST['flavor/index_item'],
+  template: JST['flavors/index_item'],
 
   initialize: function() {
   },
@@ -95,7 +94,7 @@ TwoScoopsApp.Views.FlavorList = Backbone.View.extend({
 });
 ;
 TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
-  template: JST['flavor/list_item'],
+  template: JST['flavors/list_item'],
 
   initialize: function() {
   },
@@ -110,18 +109,36 @@ TwoScoopsApp.Views.FlavorIndexItem = Backbone.View.extend({
 });
 ;
 TwoScoopsApp.Views.FlavorSearch = Backbone.View.extend({
-  template: JST['flavor/search'],
+  template: JST['flavors/search'],
 
   initialize: function() {
+    this.updateListSubview();
+  },
+
+  events: {
+    'keyup input#search-term': 'handleTyping',
+  },
+
+  handleTyping: function(event) {
+    // parse input to search
+    // maybe ajax search
+  },
+
+  maybeSearch: function (term) {
+    // if some conditions are met, post ajax
   },
 
   render: function() {
-    var content = this.template({
-      
-    });
+    var content = this.template({});
     this.$el.html(content);
     return this;
   },
+
+  updateListSubview: function () {
+    var subview = new TwoScoopsApp.Views.FlavorList({
+      collection: this.collection,
+    });
+  }
 });
 ;
 TwoScoopsApp.Routers.Search = Backbone.Router.extend({
@@ -132,25 +149,29 @@ TwoScoopsApp.Routers.Search = Backbone.Router.extend({
   },
 
   routes: {
-    ':term':'results',
+    '':'results',
+    ':term':'results'
   },
 
   results: function(term) {
-    var flavors = TwoScoopsApp.Collections.Flavors;
-    flavors.search(term);
+    var flavors = new TwoScoopsApp.Collections.Flavors();
+    flavors.fetch();
 
-    var searchView = TwoScoopsApp.Views.SearchView({
+    var searchView = new TwoScoopsApp.Views.FlavorSearch({
       collection: flavors,
     });
 
+    this._swapView(searchView);
   },
 
+// swapping router
   _swapView: function(view) {
     if (this._currentView) {
       this._currentView.remove();
     }
     this._currentView = view;
     this.$rootEl.html(view.render().$el);
+    console.log(this.$rootEl);
   },
 
   listenToUserInput: function() {

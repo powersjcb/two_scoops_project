@@ -11,8 +11,7 @@ window.TwoScoopsApp = {
     var path = window.location.pathname;
     // if (path.match(/^\/flavors\/search\//)) {
       this.searchRouter = new this.Routers.Search({
-        $rootEl: $('#search-results'),
-        $userInput: $('input#search-term'),
+        $rootEl: $('#search'),
       });
     // } else if (path.match(/^\/flavors\/share\//)) {
       // this.shareRouter = new TwoScoopsApp.Routers.Share();

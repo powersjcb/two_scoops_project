@@ -1,4 +1,4 @@
-<h4 class="list-group-item-heading"><%= flavor.get('flavor_name') %></h4>
+<h4 class="list-group-item-heading"><%= flavor.escape('flavor_name') %></h4>
 <div class="list-group-item-body">
-  <%= flavor.get('flavor_description') %>
+  <%= flavor.escape('flavor_description') %>
 </div>

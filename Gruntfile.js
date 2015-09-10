@@ -104,6 +104,7 @@ module.exports = function (grunt) {
       },
       dist: {
         src: [
+          '<%= paths.js_src %>/utils/**/*.js',
           '<%= paths.js_src %>/app.js',
           '<%= paths.js_src %>/templates/templates.js',
           '<%= paths.js_src %>/models/**/*.js',
